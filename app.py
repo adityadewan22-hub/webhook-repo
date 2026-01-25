@@ -2,10 +2,14 @@ from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+import logging
 
 load_dotenv()
 
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # --- MongoDB connection ---
 client = MongoClient(os.getenv("MONGO_URI"))
@@ -43,7 +47,7 @@ def webhook():
     payload = request.json
 
     if event_type == "push":
-        print("EVENT DETECTED: PUSH")
+        logger.info("EVENT DETECTED: PUSH")
 
     elif event_type == "pull_request":
         action = payload.get("action")
