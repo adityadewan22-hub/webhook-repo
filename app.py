@@ -54,16 +54,16 @@ def webhook():
         merged = payload.get("pull_request", {}).get("merged", False)
 
         if action == "opened":
-            print("EVENT DETECTED: PULL_REQUEST")
+            logger.info("EVENT DETECTED: PULL_REQUEST")
 
         elif action == "closed" and merged is True:
-            print("EVENT DETECTED: MERGE")
+            logger.info("EVENT DETECTED: MERGE")
 
         else:
-            print(f"IGNORED PR EVENT: {action}")
+            logger.info(f"IGNORED PR EVENT: {action}")
 
     else:
-        print(f"IGNORED EVENT TYPE: {event_type}")
+        logger.info(f"IGNORED EVENT TYPE: {event_type}")
 
     return jsonify({"status": "received"}), 200
 
