@@ -39,6 +39,11 @@ def health():
 def serve_ui():
     return send_from_directory("ui", "index.html")
 
+
+@app.route("/<path:path>")
+def serve_static_files(path):
+    return send_from_directory("ui", path)
+
 @app.route("/events", methods=["GET"])
 def get_events():
     events = list(
