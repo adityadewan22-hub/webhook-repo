@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from datetime import datetime
@@ -35,13 +35,19 @@ def store_event(action, author, from_branch, to_branch, request_id):
 def health():
     return "OK", 200
 
+@app.route("/ui")
+def serve_ui():
+    return send_from_directory("ui", "index.html")
 
 @app.route("/events", methods=["GET"])
 def get_events():
     events = list(
-        events_collection.find({}, {"_id": 0}).sort("timestamp", -1)
+        events_collection
+        .find({}, {"_id": 0})
+        .sort("timestamp", -1)
     )
     return jsonify(events), 200
+
 
 
 @app.route("/webhook", methods=["POST"])
