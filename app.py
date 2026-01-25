@@ -37,6 +37,8 @@ def get_events():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
+    print("RAW EVENT HEADER:", request.headers.get("X-GitHub-Event"))
+
     event_type = request.headers.get("X-GitHub-Event")
     payload = request.json
 
