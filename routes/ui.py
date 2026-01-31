@@ -1,5 +1,7 @@
 from flask import Blueprint, send_from_directory
 
+## route for connection to module ui
+
 ui_bp = Blueprint("ui", __name__)
 
 @ui_bp.route("/ui")

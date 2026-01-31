@@ -5,6 +5,9 @@ from services.event_service import store_event
 webhook_bp = Blueprint("webhook", __name__)
 logger = logging.getLogger(__name__)
 
+
+## check for post webhook event
+
 @webhook_bp.route("/webhook", methods=["POST"])
 def webhook():
     event_type = request.headers.get("X-GitHub-Event")
@@ -18,6 +21,8 @@ def webhook():
 
         store_event("PUSH", author, None, to_branch, request_id)
 
+## check for pull_request webhook event
+
     elif event_type == "pull_request":
         action = payload.get("action")
         pr = payload.get("pull_request", {})
@@ -29,6 +34,8 @@ def webhook():
 
         if action == "opened":
             store_event("PULL_REQUEST", author, from_branch, to_branch, request_id)
+## check for pull_request.merged in payload
+
         elif action == "closed" and merged:
             store_event("MERGE", author, from_branch, to_branch, request_id)
 
