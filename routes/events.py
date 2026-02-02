@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from db import events_collection
 import logging
+from datetime import datetime
 
 events_bp = Blueprint("events", __name__)
 logger = logging.getLogger(__name__)
@@ -10,9 +11,12 @@ logger = logging.getLogger(__name__)
 @events_bp.route("/events", methods=["GET"])
 def get_events():
     try:
+        minutes_15_ago=datetime.now()-15*60*1000
         events = list(
             events_collection
-            .find({}, {"_id": 0})
+            .find(
+                {"timestamp":{"$gte":minutes_15_ago}},
+                {"_id": 0})
             .sort("timestamp", -1)
         )
 
