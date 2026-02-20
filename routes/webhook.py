@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 import logging
-from services.event_service import store_event
+from services.tasks import store_event_task
 
 webhook_bp = Blueprint("webhook", __name__)
 logger = logging.getLogger(__name__)
@@ -26,12 +26,12 @@ def webhook():
             ref = payload.get("ref")
             to_branch = ref.split("/")[-1] if ref else None
 
-            store_event(
+            store_event_task(
                 action="PUSH",
                 author=author,
                 from_branch=None,
                 to_branch=to_branch,
-                request_id=request_id
+                request_id=request_id,
             )
 
             logger.info("Stored PUSH event")
@@ -49,24 +49,24 @@ def webhook():
 
             # Pull request opened
             if action == "opened":
-                store_event(
+                store_event_task(
                     action="PULL_REQUEST",
                     author=author,
                     from_branch=from_branch,
                     to_branch=to_branch,
-                    request_id=request_id
+                    request_id=request_id,
                 )
 
                 logger.info("Stored PULL_REQUEST event")
 
             # Pull request merged
             elif action == "closed" and merged:
-                store_event(
+                store_event_task(
                     action="MERGE",
                     author=author,
                     from_branch=from_branch,
                     to_branch=to_branch,
-                    request_id=request_id
+                    request_id=request_id,
                 )
 
                 logger.info("Stored MERGE event")
