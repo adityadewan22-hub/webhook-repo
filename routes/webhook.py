@@ -26,7 +26,7 @@ def webhook():
             ref = payload.get("ref")
             to_branch = ref.split("/")[-1] if ref else None
 
-            store_event_task(
+            store_event_task.delay(
                 action="PUSH",
                 author=author,
                 from_branch=None,
@@ -49,7 +49,7 @@ def webhook():
 
             # Pull request opened
             if action == "opened":
-                store_event_task(
+                store_event_task.delay(
                     action="PULL_REQUEST",
                     author=author,
                     from_branch=from_branch,
@@ -61,7 +61,7 @@ def webhook():
 
             # Pull request merged
             elif action == "closed" and merged:
-                store_event_task(
+                store_event_task.delay(
                     action="MERGE",
                     author=author,
                     from_branch=from_branch,
