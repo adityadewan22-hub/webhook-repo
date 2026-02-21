@@ -1,7 +1,7 @@
 import os
 from celery import Celery
 
-# Redis URL (Docker-friendly default)
+# Redis URL
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 
 celery = Celery(
@@ -10,11 +10,5 @@ celery = Celery(
     backend=REDIS_URL,
 )
 
-# Optional but nice
-celery.conf.update(
-    task_serializer="json",
-    accept_content=["json"],
-    result_serializer="json",
-    timezone="UTC",
-    enable_utc=True,
-)
+# for tasks to be discovered
+import services.tasks
